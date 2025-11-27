@@ -49,7 +49,7 @@ function App() {
                         <Routes>
                             {/* Защищенные маршруты */}
                             <Route
-                                path="/"
+                                path="/FBD_KR4/"
                                 element={
                                     <ProtectedRoute isLoggedIn={isLoggedIn}>
                                         <TechnologiesPage />
@@ -57,7 +57,7 @@ function App() {
                                 }
                             />
                             <Route
-                                path="/statistics"
+                                path="/FBD_KR4/statistics"
                                 element={
                                     <ProtectedRoute isLoggedIn={isLoggedIn}>
                                         <StatisticsPage />
@@ -65,7 +65,7 @@ function App() {
                                 }
                             />
                             <Route
-                                path="/data-import-export"
+                                path="/FBD_KR4/data-import-export"
                                 element={
                                     <ProtectedRoute isLoggedIn={isLoggedIn}>
                                         <DataImportExportPage />
@@ -73,7 +73,7 @@ function App() {
                             />
 
                             <Route
-                                path="/add-technology"
+                                path="/FBD_KR4/add-technology"
                                 element={
                                     <ProtectedRoute isLoggedIn={isLoggedIn}>
                                         <TechnologyForm
@@ -85,7 +85,7 @@ function App() {
                             />
 
                             <Route
-                                path="/settings"
+                                path="/FBD_KR4/settings"
                                 element={
                                     <ProtectedRoute isLoggedIn={isLoggedIn}>
                                         <SettingsPage />
@@ -95,7 +95,7 @@ function App() {
 
                             {/* Страница входа */}
                             <Route
-                                path="/login"
+                                path="/FBD_KR4/login"
                                 element={
                                     <LoginPage />
                                 }
