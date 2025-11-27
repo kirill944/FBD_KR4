@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Трекер изучения технологий - приложение для отслеживания прогресса в изучении программирования и технологий">
+    <meta name="keywords" content="технологии, обучение, программирование, React, трекер, прогресс">
+    <meta name="author" content="Трекер технологий">
+
+    <!-- Open Graph метатеги для соц. сетей -->
+    <meta property="og:title" content="Трекер изучения технологий">
+    <meta property="og:description" content="Отслеживайте ваш прогресс в изучении программирования и технологий">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ваш-username.github.io/technology-tracker">
+
+    <!-- Twitter Card метатеги -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Трекер изучения технологий">
+    <meta name="twitter:description" content="Отслеживайте ваш прогресс в изучении программирования и технологий">
+
+    <!-- Манифест для PWA (опционально) -->
+    <link rel="manifest" href="data:application/json;base64,ew0KICAic2hvcnRfbmFtZSI6ICLQotGA0LXQutC10YAg0YLQtdGF0L3QvtC70L7Qs9C40LkiLA0KICAibmFtZSI6ICLQotGA0LXQutC10YAg0LjQt9GD0YfQtdC90LjRjyDRgtC10YXQvdC+0LvQvtCz0LjQuSIsDQogICJpY29ucyI6IFsNCiAgICB7DQogICAgICAic3JjIjogImZhdmljb24uaWNvIiwNCiAgICAgICJzaXplcyI6ICI2NHg2NCAzMngzMiAyNHgyNCAxNngxNiIsDQogICAgICAidHlwZSI6ICJpbWFnZS94LWljb24iDQogICAgfQ0KICBdLA0KICAic3RhcnRfdXJsIjogIi4iLA0KICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwNCiAgInRoZW1lX2NvbG9yIjogIiMwMDAwMDAiLA0KICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZmZmZmZmIg0KfQ==">
+
+    <!-- Цвет темы браузера -->
+    <meta name="theme-color" content="#2c3e50">
+
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    <!-- Канонический URL -->
+    <link rel="canonical" href="https://ваш-username.github.io/technology-tracker">
+
+    <!-- Предзагрузка шрифтов (если используются) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <title>Трекер изучения технологий</title>
+
+    <style>
+        /* Предзагрузка критического CSS */
+        /* Стили для начального отображения до загрузки React */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+            'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+            sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* Стили для загрузочного экрана */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #2c3e50;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Скрыть загрузочный экран после загрузки */
+        .loaded #loading-screen {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Стили для noscript */
+        .noscript-message {
+            text-align: center;
+            padding: 40px 20px;
+            background: #e74c3c;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+  <script type="module" crossorigin src="/FBD_KR4/assets/index-0e6fd992.js"></script>
+  <link rel="stylesheet" href="/FBD_KR4/assets/index-0f46e149.css">
+</head>
+<body>
+<!-- Сообщение для пользователей с отключенным JavaScript -->
+<noscript>
+    <div class="noscript-message">
+        <h1>Включите JavaScript</h1>
+        <p>Для работы приложения "Трекер технологий" требуется JavaScript. Пожалуйста, включите JavaScript в настройках вашего браузера.</p>
+    </div>
+</noscript>
+
+<!-- Загрузочный экран -->
+<div id="loading-screen">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Загрузка Трекера технологий...</div>
+</div>
+
+<!-- Корневой элемент для React приложения -->
+<div id="root"></div>
+
+
+
+<script>
+    // Скрипт для скрытия загрузочного экрана
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            document.body.classList.add('loaded');
+            // Удаляем загрузочный экран из DOM после анимации
+            setTimeout(function() {
+                const loadingScreen = document.getElementById('loading-screen');
+                if (loadingScreen) {
+                    loadingScreen.remove();
+                }
+            }, 500);
+        }, 1000);
+    });
+
+    // Обработка ошибок загрузки
+    window.addEventListener('error', function(e) {
+        console.error('Ошибка загрузки приложения:', e.error);
+        const loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen) {
+            loadingScreen.innerHTML = `
+            <div style="text-align: center; padding: 20px;">
+              <h2 style="color: #e74c3c;">Ошибка загрузки</h2>
+              <p>Не удалось загрузить приложение. Пожалуйста, обновите страницу.</p>
+              <button onclick="window.location.reload()" style="
+                background: #3498db;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-top: 10px;
+              ">Обновить страницу</button>
+            </div>
+          `;
+        }
+    });
+</script>
+</body>
+</html>
