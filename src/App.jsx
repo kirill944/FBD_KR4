@@ -56,6 +56,7 @@ function App() {
                                     </ProtectedRoute>
                                 }
                             />
+
                             <Route
                                 path="/FBD_KR4/statistics"
                                 element={
