@@ -1,0 +1,141 @@
+.technology-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-left: 4px solid #bdc3c7;
+}
+
+.technology-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.technology-card.status-not-started {
+    border-left-color: #e74c3c;
+}
+
+.technology-card.status-in-progress {
+    border-left-color: #f39c12;
+}
+
+.technology-card.status-completed {
+    border-left-color: #27ae60;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.card-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    flex: 1;
+}
+
+.status-indicator {
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #ecf0f1;
+    color: #2c3e50;
+    margin-left: 10px;
+}
+
+.description {
+    color: #7f8c8d;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.category, .difficulty, .deadline {
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.card-actions {
+    margin-top: 15px;
+    border-top: 1px solid #ecf0f1;
+    padding-top: 15px;
+}
+
+.btn-notes {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-notes:hover {
+    background: #2980b9;
+}
+
+.resources {
+    margin-top: 10px;
+}
+
+.resources ul {
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0 0;
+}
+
+.resources li {
+    margin-bottom: 5px;
+}
+
+.resources a {
+    color: #3498db;
+    text-decoration: none;
+    font-size: 12px;
+    word-break: break-all;
+}
+
+.resources a:hover {
+    text-decoration: underline;
+}
+
+.notes-section {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #ecf0f1;
+}
+
+.notes-section h4 {
+    margin: 0 0 10px 0;
+    color: #2c3e50;
+    font-size: 14px;
+}
+
+.notes-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 80px;
+    font-family: inherit;
+}
+
+.notes-textarea:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.notes-hint {
+    font-size: 12px;
+    color: #7f8c8d;
+    margin-top: 5px;
+    text-align: right;
+}
