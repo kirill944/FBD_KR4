@@ -7,7 +7,7 @@ function Navigation({ isLoggedIn, username, onLogout }) {
     return (
         <nav className="main-navigation">
             <div className="nav-brand">
-                <Link to="/">
+                <Link to="/FBD_KR4/">
                     <h2>Трекер технологий</h2>
                 </Link>
             </div>
@@ -15,7 +15,7 @@ function Navigation({ isLoggedIn, username, onLogout }) {
             <ul className="nav-menu">
                 <li>
                     <Link
-                        to="/"
+                        to="/FBD_KR4/"
                         className={location.pathname === '/' ? 'active' : ''}
                     >
                         Главная
@@ -26,7 +26,7 @@ function Navigation({ isLoggedIn, username, onLogout }) {
                     <>
                         <li>
                             <Link
-                                to="/statistics"
+                                to="/FBD_KR4/statistics"
                                 className={location.pathname === '/statistics' ? 'active' : ''}
                             >
                                 Статистика
@@ -34,7 +34,7 @@ function Navigation({ isLoggedIn, username, onLogout }) {
                         </li>
                         <li>
                             <Link
-                                to="/data-import-export"
+                                to="/FBD_KR4/data-import-export"
                                 className={location.pathname === '/data-import-export' ? 'active' : ''}
                             >
                                 Импорт/Экспорт
@@ -42,7 +42,7 @@ function Navigation({ isLoggedIn, username, onLogout }) {
                         </li>
                         <li>
                             <Link
-                                to="/settings"
+                                to="/FBD_KR4/settings"
                                 className={location.pathname === '/dashboard' ? 'active' : ''}
                             >
                                 Настройки
@@ -58,7 +58,7 @@ function Navigation({ isLoggedIn, username, onLogout }) {
                 ) : (
                     <li>
                         <Link
-                            to="/login"
+                            to="/FBD_KR4/login"
                             className={location.pathname === '/login' ? 'active' : ''}
                         >
                             Войти

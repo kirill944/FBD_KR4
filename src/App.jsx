@@ -19,11 +19,6 @@ function App() {
     const [username, setUsername] = useLocalStorage('username', 'Пользователь');
     const { theme } = useTheme();
 
-    const handleLogin = (user) => {
-        setIsLoggedIn(true);
-        setUsername(user);
-    };
-
     const handleLogout = () => {
         setIsLoggedIn(false);
         setUsername('Гость');

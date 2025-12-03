@@ -12,7 +12,6 @@ function Home() {
 
     const stats = getStats()
 
-
     return (
         <div className="page">
             <div className="page-header">
@@ -45,7 +44,7 @@ function Home() {
                                 <div className="tech-meta">
                                     <span className={`status status-${tech.status}`}>
                                         {tech.status === 'completed' ? '✅' :
-                                            tech.status === 'in-progress' ? '' : ''}
+                                            tech.status === 'in-progress' ? '🔄' : '⏳'}
                                         {tech.status}
                                     </span>
                                     <Link to={`/technology/${tech.id}`} className="btn-link">

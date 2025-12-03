@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import {redirect, useNavigate} from 'react-router-dom'
 import useLocalStorage from "../hooks/useLocalStorage.js";
 
 
@@ -13,7 +13,8 @@ function Login({ onLogin }) {
     const handleLogin = () => {
         if (username && password) {
             setIsLoggedIn(true);
-            setUsername(username)
+            setUsername(username);
+            navigate('/FBD_KR4')
         } else {
             setError('Заполните все поля')
         }

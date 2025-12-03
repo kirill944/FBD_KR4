@@ -1,0 +1,330 @@
+.weather-widget {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 20px;
+    color: white;
+    box-shadow: 0 8px 32px rgba(103, 126, 234, 0.3);
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.weather-widget::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.1;
+    z-index: 1;
+}
+
+.weather-widget > * {
+    position: relative;
+    z-index: 2;
+}
+
+.weather-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.weather-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.weather-refresh-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.weather-refresh-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(180deg);
+}
+
+.weather-refresh-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.weather-error-message {
+    background: rgba(231, 76, 60, 0.2);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+.weather-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.weather-main {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.weather-icon-large {
+    font-size: 3.5rem;
+    line-height: 1;
+}
+
+.weather-temp {
+    flex: 1;
+}
+
+.temp-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    line-height: 1;
+    margin-bottom: 5px;
+}
+
+.temp-description {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+.weather-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.weather-location {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.location-icon {
+    font-size: 1rem;
+}
+
+.weather-stats {
+    display: flex;
+    gap: 20px;
+    margin-top: 5px;
+}
+
+.weather-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.stat-icon {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #17a2b8;
+    opacity: 0.8;
+}
+
+.weather-city-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.city-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.city-input:focus {
+    background: white;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.city-change-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #667eea;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.city-change-btn:hover:not(:disabled) {
+    background: white;
+    transform: translateY(-1px);
+}
+
+.city-change-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.weather-update-time {
+    text-align: center;
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-top: 5px;
+}
+
+/* Состояния загрузки и ошибки */
+.weather-widget.loading,
+.weather-widget.error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    text-align: center;
+}
+
+.weather-spinner {
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.weather-error {
+    color: #ff6b6b;
+    margin-bottom: 15px;
+}
+
+.weather-retry-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.weather-retry-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .weather-widget {
+        padding: 15px;
+    }
+
+    .weather-main {
+        gap: 15px;
+    }
+
+    .weather-icon-large {
+        font-size: 3rem;
+    }
+
+    .temp-value {
+        font-size: 2rem;
+    }
+
+    .weather-stats {
+        gap: 10px;
+    }
+
+    .weather-stat {
+        padding: 8px;
+    }
+
+    .stat-icon {
+        font-size: 1.2rem;
+    }
+
+    .stat-value {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .weather-widget {
+        border-radius: 10px;
+    }
+
+    .weather-header h3 {
+        font-size: 1rem;
+    }
+
+    .temp-value {
+        font-size: 1.8rem;
+    }
+
+    .temp-description {
+        font-size: 0.9rem;
+    }
+
+    .weather-city-form {
+        flex-direction: column;
+    }
+
+    .city-change-btn {
+        width: 100%;
+    }
+}
+
+/* Стили для меток в статистике погоды */
+.wind-label {
+    color: #2c3e50 !important;
+    font-weight: 600 !important;
+    opacity: 0.9 !important;
+}
+
+.humidity-label {
+    color: #2c3e50 !important;
+    font-weight: 600 !important;
+    opacity: 0.9 !important;
+}

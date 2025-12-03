@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom'
 
 function ProtectedRoute({ children, isLoggedIn }) {
     if (!isLoggedIn) {
-        return <Navigate to="/login" replace />
+        return <Navigate to="/FBD_KR4/login" replace />
     }
 
     return children

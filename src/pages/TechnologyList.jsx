@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import useTechnologies from '../hooks/useTechnologies'
 import TechnologyCard from '../components/TechnologyCard'
+import WeatherWidget from '../components/WeatherWidget'
 
 function TechnologyList() {
     const {
@@ -32,9 +33,14 @@ function TechnologyList() {
         <div className="page">
             <div className="page-header">
                 <h1>Все технологии</h1>
-                <Link to="/add-technology" className="btn btn-primary">
+                <Link to="/FBD_KR4/add-technology" className="btn btn-primary">
                     + Добавить технологию
                 </Link>
+            </div>
+
+            {/* Weather Widget Section - Добавляем сюда */}
+            <div className="weather-section">
+                <WeatherWidget />
             </div>
 
             {/* Фильтры и поиск */}
