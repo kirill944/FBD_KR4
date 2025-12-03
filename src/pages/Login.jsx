@@ -13,8 +13,7 @@ function Login({ onLogin }) {
     const handleLogin = () => {
         if (username && password) {
             setIsLoggedIn(true);
-            setUsername(username);
-            navigate('/FBD_KR4')
+            setUsername(username)
         } else {
             setError('Заполните все поля')
         }
