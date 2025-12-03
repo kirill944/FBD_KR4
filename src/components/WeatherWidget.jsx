@@ -93,6 +93,7 @@ function WeatherWidget() {
                 </div>
             )}
 
+
             <div className="weather-content">
                 <div className="weather-main">
                     <div className="weather-icon">
