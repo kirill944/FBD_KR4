@@ -8,6 +8,7 @@ function Navigation({ isLoggedIn, username, onLogout }) {
         <nav className="main-navigation">
             <div className="nav-brand">
                 <Link to="/FBD_KR4/">
+
                     <h2>Трекер технологий</h2>
                 </Link>
             </div>
