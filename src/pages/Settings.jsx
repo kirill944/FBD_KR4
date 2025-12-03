@@ -203,25 +203,6 @@ function Settings() {
                     </CardContent>
                 </Card>
 
-                {/* Внешний вид */}
-                <Card sx={{ mb: 3 }}>
-                    <CardContent>
-                        <Typography variant="h5" gutterBottom>
-                            Внешний вид
-                        </Typography>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={darkMode}
-                                    onChange={handleThemeToggle}
-                                    color="primary"
-                                />
-                            }
-                            label={darkMode ? 'Темная тема' : 'Светлая тема'}
-                        />
-                    </CardContent>
-                </Card>
-
                 {/* Язык */}
                 <Card sx={{ mb: 3 }}>
                     <CardContent>

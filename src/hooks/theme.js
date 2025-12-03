@@ -18,8 +18,8 @@ export const createAppTheme = (mode) => createTheme({
             paper: mode === 'light' ? '#ffffff' : '#1e1e1e',
         },
         text: {
-            primary: mode === 'light' ? '#333333' : '#ffffff',
-            secondary: mode === 'light' ? '#666666' : '#b0b0b0',
+            primary: '#121212',
+            secondary: '#121212',
         },
     },
     typography: {
