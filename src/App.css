@@ -1085,3 +1085,28 @@
         max-width: none;
     }
 }
+
+.theme-toggle-item {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.theme-toggle-item button {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.theme-toggle-item button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Для темной темы */
+[data-mui-color-scheme="dark"] .theme-toggle-item button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}

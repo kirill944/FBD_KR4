@@ -3,20 +3,20 @@ import { createAppTheme } from './theme';
 import useLocalStorage from './useLocalStorage';
 
 export const useTheme = () => {
-    const [darkMode, setDarkMode] = useLocalStorage('darkMode', false);
+    const [mode, setMode] = useLocalStorage('theme-mode', 'light');
 
     const theme = useMemo(() =>
-            createAppTheme(darkMode ? 'dark' : 'light'),
-        [darkMode]
+            createAppTheme(mode),
+        [mode]
     );
 
-    const toggleDarkMode = () => {
-        setDarkMode(prev => !prev);
+    const toggleTheme = () => {
+        setMode(prev => prev === 'light' ? 'dark' : 'light');
     };
 
     return {
-        darkMode,
-        toggleDarkMode,
-        theme
+        theme,
+        toggleTheme,
+        mode
     };
 };

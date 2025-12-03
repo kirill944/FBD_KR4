@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 import Navigation from './components/Navigation';
 import TechnologyForm from './components/TechnologyForm';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -9,15 +10,17 @@ import StatisticsPage from './pages/Statistics';
 import SettingsPage from './pages/Settings';
 import LoginPage from './pages/Login';
 import DataImportExportPage from './pages/DataImportExport';
-import NotificationContainer from './components/NotificationContainer';
 import { useTheme } from './hooks/useTheme';
 import useLocalStorage from './hooks/useLocalStorage';
+import MuiNotification from './components/MuiNotification';
+import { useNotifications } from './hooks/useNotifications.jsx';
 import './App.css';
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = React.useState(true);
     const [username, setUsername] = useLocalStorage('username', 'Пользователь');
-    const { theme } = useTheme();
+    const { theme, toggleTheme, mode } = useTheme();
+    const { notifications, removeNotification } = useNotifications();
 
     const handleLogout = () => {
         setIsLoggedIn(false);
@@ -32,12 +35,15 @@ function App() {
 
     return (
         <ThemeProvider theme={theme}>
+            <CssBaseline />
             <Router>
                 <div className="App">
                     <Navigation
                         isLoggedIn={isLoggedIn}
                         username={username}
                         onLogout={handleLogout}
+                        theme={{ mode }}
+                        toggleTheme={toggleTheme}
                     />
 
                     <main className="main-content" style={{ padding: '20px' }}>
@@ -65,7 +71,8 @@ function App() {
                                 element={
                                     <ProtectedRoute isLoggedIn={isLoggedIn}>
                                         <DataImportExportPage />
-                                    </ProtectedRoute>}
+                                    </ProtectedRoute>
+                                }
                             />
 
                             <Route
@@ -101,8 +108,11 @@ function App() {
                         </Routes>
                     </main>
 
-                    {/* Контейнер для уведомлений */}
-                    <NotificationContainer />
+                    {/* Контейнер для уведомлений MUI */}
+                    <MuiNotification
+                        notifications={notifications}
+                        removeNotification={removeNotification}
+                    />
                 </div>
             </Router>
         </ThemeProvider>

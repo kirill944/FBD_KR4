@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import useLocalStorage from '../hooks/useLocalStorage'
 import { useTheme } from '../hooks/useTheme'
-import { useNotifications } from '../hooks/useNotifications'
+import { useNotifications } from '../hooks/useNotifications.jsx'
 import {
     TextField,
     Button,

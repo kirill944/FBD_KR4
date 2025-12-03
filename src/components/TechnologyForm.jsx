@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useNotifications } from '../hooks/useNotifications'
+import { useNotifications } from '../hooks/useNotifications.jsx'
 import './TechnologyForm.css'
+import { Button } from '@mui/material';
 
 function TechnologyForm({ onSave, onCancel, initialData = {} }) {
     const navigate = useNavigate()
@@ -127,12 +128,13 @@ function TechnologyForm({ onSave, onCancel, initialData = {} }) {
 
             // Сохраняем в localStorage
             saveTechnologyToLocalStorage(cleanedData)
+            addNotification(`Технология "${formData.title}" успешно сохранена!`, 'success');
 
             // Показываем уведомление
             addNotification(`Технология "${cleanedData.title}" успешно сохранена!`, 'success')
 
             // Перенаправляем на страницу технологий
-            navigate('/technologies')
+            navigate('/FBD_KR4')
         }
     }
 
@@ -163,12 +165,18 @@ function TechnologyForm({ onSave, onCancel, initialData = {} }) {
         }
     }
 
+    const handleClick = () => {
+        addNotification('Тестовое уведомление!', 'success');
+    };
+
     return (
         <div className="page">
             <div className="page-header">
                 <h1>{initialData.title ? 'Редактирование технологии' : 'Добавление новой технологии'}</h1>
             </div>
-
+            <Button variant="contained" onClick={handleClick}>
+                Тест уведомления
+            </Button>
             <form onSubmit={handleSubmit} className="technology-form" noValidate>
                 {/* Поле названия */}
                 <div className="form-group">
