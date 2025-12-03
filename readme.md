@@ -4,6 +4,6 @@
 
 # Инструкция
 
-- git clone 
+- git clone https://github.com/kirill944/FBD_KR4
 - npm install
-- npm start
+- npm run dev
