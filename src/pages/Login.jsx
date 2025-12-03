@@ -14,6 +14,7 @@ function Login({ onLogin }) {
         if (username && password) {
             setIsLoggedIn(true);
             setUsername(username);
+
         } else {
             setError('Заполните все поля')
         }
