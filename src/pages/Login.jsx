@@ -13,15 +13,11 @@ function Login({ onLogin }) {
     const handleLogin = () => {
         if (username && password) {
             setIsLoggedIn(true);
-            setUsername(username)
+            setUsername(username);
         } else {
             setError('Заполните все поля')
         }
     };
-
-    const handleSubmit = (e) => {
-        navigate('/')
-    }
 
     const handleDemoLogin = () => {
         setUsername('admin')
