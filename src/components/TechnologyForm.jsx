@@ -1,8 +1,38 @@
+// TechnologyForm.jsx - переработанный под Material UI
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useNotifications } from '../hooks/useNotifications.jsx'
-import './TechnologyForm.css'
-import { Button } from '@mui/material';
+import {
+    Container,
+    Typography,
+    Box,
+    Paper,
+    Button,
+    TextField,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    FormHelperText,
+    IconButton,
+    Stack,
+    Chip,
+    Alert,
+    Grid,
+    Divider
+} from '@mui/material'
+import {
+    Add as AddIcon,
+    Remove as RemoveIcon,
+    Save,
+    Cancel,
+    Delete,
+    Link as LinkIcon,
+    CalendarToday,
+    Category,
+    School,
+    TrendingUp
+} from '@mui/icons-material'
 
 function TechnologyForm({ onSave, onCancel, initialData = {} }) {
     const navigate = useNavigate()
@@ -24,6 +54,7 @@ function TechnologyForm({ onSave, onCancel, initialData = {} }) {
 
     const [errors, setErrors] = useState({})
     const [isFormValid, setIsFormValid] = useState(false)
+    const [touched, setTouched] = useState({})
 
     const validateForm = () => {
         const newErrors = {}
@@ -86,6 +117,7 @@ function TechnologyForm({ onSave, onCancel, initialData = {} }) {
             [name]: value,
             updatedAt: new Date().toISOString()
         }))
+        setTouched(prev => ({ ...prev, [name]: true }))
     }
 
     const handleResourceChange = (index, value) => {
@@ -96,6 +128,7 @@ function TechnologyForm({ onSave, onCancel, initialData = {} }) {
             resources: newResources,
             updatedAt: new Date().toISOString()
         }))
+        setTouched(prev => ({ ...prev, [`resource_${index}`]: true }))
     }
 
     const addResourceField = () => {
@@ -119,6 +152,12 @@ function TechnologyForm({ onSave, onCancel, initialData = {} }) {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        setTouched({
+            title: true,
+            description: true,
+            ...Object.fromEntries(formData.resources.map((_, i) => [`resource_${i}`, true]))
+        })
+
         if (isFormValid) {
             const cleanedData = {
                 ...formData,
@@ -128,19 +167,15 @@ function TechnologyForm({ onSave, onCancel, initialData = {} }) {
 
             // Сохраняем в localStorage
             saveTechnologyToLocalStorage(cleanedData)
-            addNotification(`Технология "${formData.title}" успешно сохранена!`, 'success');
-
-            // Показываем уведомление
-            addNotification(`Технология "${cleanedData.title}" успешно сохранена!`, 'success')
-
-            // Перенаправляем на страницу технологий
+            addNotification(`Технология "${formData.title}" успешно сохранена!`, 'success')
             navigate('/FBD_KR4')
+        } else {
+            addNotification('Пожалуйста, исправьте ошибки в форме', 'error')
         }
     }
 
     const saveTechnologyToLocalStorage = (technologyData) => {
         try {
-            // Получаем существующие технологии из localStorage
             const existingTechnologies = JSON.parse(localStorage.getItem('technologies') || '[]')
 
             if (initialData.id) {
@@ -165,188 +200,244 @@ function TechnologyForm({ onSave, onCancel, initialData = {} }) {
         }
     }
 
-    const handleClick = () => {
-        addNotification('Тестовое уведомление!', 'success');
-    };
+    const handleTestNotification = () => {
+        addNotification('Тестовое уведомление!', 'success')
+    }
+
+    const handleFieldBlur = (fieldName) => {
+        setTouched(prev => ({ ...prev, [fieldName]: true }))
+    }
 
     return (
-        <div className="page">
-            <div className="page-header">
-                <h1>{initialData.title ? 'Редактирование технологии' : 'Добавление новой технологии'}</h1>
-            </div>
-            <Button variant="contained" onClick={handleClick}>
-                Тест уведомления
-            </Button>
-            <form onSubmit={handleSubmit} className="technology-form" noValidate>
-                {/* Поле названия */}
-                <div className="form-group">
-                    <label htmlFor="title" className="required">
-                        Название технологии
-                    </label>
-                    <input
-                        id="title"
-                        name="title"
-                        type="text"
-                        value={formData.title}
-                        onChange={handleChange}
-                        className={errors.title ? 'error' : ''}
-                        placeholder="Например: React, Node.js, TypeScript"
-                        aria-describedby={errors.title ? 'title-error' : undefined}
-                        required
-                    />
-                    {errors.title && (
-                        <span id="title-error" className="error-message" role="alert">
-                            {errors.title}
-                        </span>
-                    )}
-                </div>
+        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            <Paper sx={{ p: 3 }}>
+                {/* Заголовок */}
+                <Box sx={{ mb: 3 }}>
+                    <Typography variant="h4" component="h1" gutterBottom>
+                        {initialData.title ? 'Редактирование технологии' : 'Добавление новой технологии'}
+                    </Typography>
+                    <Typography color="text.secondary" paragraph>
+                        Заполните форму для {initialData.title ? 'редактирования' : 'добавления'} технологии
+                    </Typography>
+                </Box>
 
-                {/* Поле описания */}
-                <div className="form-group">
-                    <label htmlFor="description" className="required">
-                        Описание
-                    </label>
-                    <textarea
-                        id="description"
-                        name="description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        rows="4"
-                        className={errors.description ? 'error' : ''}
-                        placeholder="Опишите, что это за технология и зачем её изучать..."
-                        aria-describedby={errors.description ? 'description-error' : undefined}
-                        required
-                    />
-                    {errors.description && (
-                        <span id="description-error" className="error-message" role="alert">
-                            {errors.description}
-                        </span>
-                    )}
-                </div>
+                <form onSubmit={handleSubmit} noValidate>
+                    <Grid container spacing={3}>
+                        {/* Основная информация */}
+                        <Grid item xs={12} md={8}>
+                            <Paper variant="outlined" sx={{ p: 2, mb: 3 }}>
+                                <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <TrendingUp sx={{ mr: 1 }} />
+                                    Основная информация
+                                </Typography>
 
-                {/* Выбор категории */}
-                <div className="form-group">
-                    <label htmlFor="category">Категория</label>
-                    <select
-                        id="category"
-                        name="category"
-                        value={formData.category}
-                        onChange={handleChange}
-                    >
-                        <option value="frontend">Frontend</option>
-                        <option value="backend">Backend</option>
-                        <option value="database">База данных</option>
-                        <option value="devops">DevOps</option>
-                        <option value="mobile">Мобильная разработка</option>
-                        <option value="other">Другое</option>
-                    </select>
-                </div>
+                                <TextField
+                                    fullWidth
+                                    label="Название технологии *"
+                                    name="title"
+                                    value={formData.title}
+                                    onChange={handleChange}
+                                    onBlur={() => handleFieldBlur('title')}
+                                    error={touched.title && !!errors.title}
+                                    helperText={touched.title && errors.title}
+                                    placeholder="Например: React, Node.js, TypeScript"
+                                    margin="normal"
+                                    required
+                                />
 
-                {/* Выбор сложности */}
-                <div className="form-group">
-                    <label htmlFor="difficulty">Сложность</label>
-                    <select
-                        id="difficulty"
-                        name="difficulty"
-                        value={formData.difficulty}
-                        onChange={handleChange}
-                    >
-                        <option value="beginner">Начальный</option>
-                        <option value="intermediate">Средний</option>
-                        <option value="advanced">Продвинутый</option>
-                    </select>
-                </div>
+                                <TextField
+                                    fullWidth
+                                    label="Описание *"
+                                    name="description"
+                                    value={formData.description}
+                                    onChange={handleChange}
+                                    onBlur={() => handleFieldBlur('description')}
+                                    error={touched.description && !!errors.description}
+                                    helperText={touched.description && errors.description}
+                                    placeholder="Опишите, что это за технология и зачем её изучать..."
+                                    multiline
+                                    rows={4}
+                                    margin="normal"
+                                    required
+                                />
 
-                {/* Дедлайн */}
-                <div className="form-group">
-                    <label htmlFor="deadline">Дедлайн (необязательно)</label>
-                    <input
-                        id="deadline"
-                        name="deadline"
-                        type="date"
-                        value={formData.deadline}
-                        onChange={handleChange}
-                        className={errors.deadline ? 'error' : ''}
-                        aria-describedby={errors.deadline ? 'deadline-error' : undefined}
-                    />
-                    {errors.deadline && (
-                        <span id="deadline-error" className="error-message" role="alert">
-                            {errors.deadline}
-                        </span>
-                    )}
-                </div>
+                                <TextField
+                                    fullWidth
+                                    label="Заметки"
+                                    name="notes"
+                                    value={formData.notes}
+                                    onChange={handleChange}
+                                    placeholder="Дополнительные заметки о технологии..."
+                                    multiline
+                                    rows={3}
+                                    margin="normal"
+                                />
+                            </Paper>
+                        </Grid>
 
-                {/* Заметки */}
-                <div className="form-group">
-                    <label htmlFor="notes">Заметки</label>
-                    <textarea
-                        id="notes"
-                        name="notes"
-                        value={formData.notes}
-                        onChange={handleChange}
-                        rows="3"
-                        placeholder="Дополнительные заметки о технологии..."
-                    />
-                </div>
+                        {/* Классификация и настройки */}
+                        <Grid item xs={12} md={4}>
+                            <Paper variant="outlined" sx={{ p: 2, mb: 3 }}>
+                                <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <Category sx={{ mr: 1 }} />
+                                    Классификация
+                                </Typography>
 
-                {/* Список ресурсов для изучения */}
-                <div className="form-group">
-                    <label>Ресурсы для изучения</label>
-                    {formData.resources.map((resource, index) => (
-                        <div key={index} className="resource-field">
-                            <input
-                                type="url"
-                                value={resource}
-                                onChange={(e) => handleResourceChange(index, e.target.value)}
-                                placeholder="https://example.com"
-                                className={errors[`resource_${index}`] ? 'error' : ''}
-                                aria-describedby={errors[`resource_${index}`] ? `resource-${index}-error` : undefined}
-                            />
-                            {formData.resources.length > 1 && (
-                                <button
-                                    type="button"
-                                    onClick={() => removeResourceField(index)}
-                                    className="btn-remove"
-                                    aria-label={`Удалить ресурс ${index + 1}`}
+                                <FormControl fullWidth margin="normal">
+                                    <InputLabel>Категория</InputLabel>
+                                    <Select
+                                        name="category"
+                                        value={formData.category}
+                                        onChange={handleChange}
+                                        label="Категория"
+                                    >
+                                        <MenuItem value="frontend">Frontend</MenuItem>
+                                        <MenuItem value="backend">Backend</MenuItem>
+                                        <MenuItem value="database">База данных</MenuItem>
+                                        <MenuItem value="devops">DevOps</MenuItem>
+                                        <MenuItem value="mobile">Мобильная разработка</MenuItem>
+                                        <MenuItem value="other">Другое</MenuItem>
+                                    </Select>
+                                </FormControl>
+
+                                <FormControl fullWidth margin="normal">
+                                    <InputLabel>Сложность</InputLabel>
+                                    <Select
+                                        name="difficulty"
+                                        value={formData.difficulty}
+                                        onChange={handleChange}
+                                        label="Сложность"
+                                    >
+                                        <MenuItem value="beginner">Начальный</MenuItem>
+                                        <MenuItem value="intermediate">Средний</MenuItem>
+                                        <MenuItem value="advanced">Продвинутый</MenuItem>
+                                    </Select>
+                                </FormControl>
+
+                                <TextField
+                                    fullWidth
+                                    label="Дедлайн"
+                                    name="deadline"
+                                    type="date"
+                                    value={formData.deadline}
+                                    onChange={handleChange}
+                                    onBlur={() => handleFieldBlur('deadline')}
+                                    error={touched.deadline && !!errors.deadline}
+                                    helperText={touched.deadline && errors.deadline}
+                                    margin="normal"
+                                    InputLabelProps={{ shrink: true }}
+                                    InputProps={{
+                                        startAdornment: <CalendarToday sx={{ mr: 1, color: 'action.active' }} />
+                                    }}
+                                />
+                            </Paper>
+                        </Grid>
+
+                        {/* Ресурсы для изучения */}
+                        <Grid item xs={12}>
+                            <Paper variant="outlined" sx={{ p: 2 }}>
+                                <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <School sx={{ mr: 1 }} />
+                                    Ресурсы для изучения
+                                </Typography>
+
+                                {formData.resources.map((resource, index) => (
+                                    <Box key={index} sx={{ mb: 2 }}>
+                                        <Stack direction="row" spacing={1} alignItems="flex-start">
+                                            <TextField
+                                                fullWidth
+                                                label={`Ресурс ${index + 1}`}
+                                                value={resource}
+                                                onChange={(e) => handleResourceChange(index, e.target.value)}
+                                                onBlur={() => handleFieldBlur(`resource_${index}`)}
+                                                error={touched[`resource_${index}`] && !!errors[`resource_${index}`]}
+                                                helperText={touched[`resource_${index}`] && errors[`resource_${index}`]}
+                                                placeholder="https://example.com"
+                                                type="url"
+                                                InputProps={{
+                                                    startAdornment: <LinkIcon sx={{ mr: 1, color: 'action.active' }} />
+                                                }}
+                                            />
+                                            {formData.resources.length > 1 && (
+                                                <IconButton
+                                                    onClick={() => removeResourceField(index)}
+                                                    color="error"
+                                                    sx={{ mt: 1 }}
+                                                    aria-label={`Удалить ресурс ${index + 1}`}
+                                                >
+                                                    <RemoveIcon />
+                                                </IconButton>
+                                            )}
+                                        </Stack>
+                                    </Box>
+                                ))}
+
+                                <Button
+                                    startIcon={<AddIcon />}
+                                    onClick={addResourceField}
+                                    variant="outlined"
+                                    sx={{ mt: 1 }}
                                 >
-                                    Удалить
-                                </button>
-                            )}
-                            {errors[`resource_${index}`] && (
-                                <span id={`resource-${index}-error`} className="error-message" role="alert">
-                                    {errors[`resource_${index}`]}
-                                </span>
-                            )}
-                        </div>
-                    ))}
-                    <button
-                        type="button"
-                        onClick={addResourceField}
-                        className="btn-add-resource"
-                    >
-                        + Добавить ресурс
-                    </button>
-                </div>
+                                    Добавить ресурс
+                                </Button>
 
-                {/* Кнопки действий */}
-                <div className="form-actions">
-                    <button
-                        type="submit"
-                        className="btn-primary"
-                        disabled={!isFormValid}
-                    >
-                        {initialData.title ? 'Обновить' : 'Добавить технологию'}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={onCancel}
-                        className="btn-secondary"
-                    >
-                        Отмена
-                    </button>
-                </div>
-            </form>
-        </div>
+                                <Alert severity="info" sx={{ mt: 2 }}>
+                                    Добавьте ссылки на полезные материалы, документацию или курсы
+                                </Alert>
+                            </Paper>
+                        </Grid>
+
+                        {/* Статус валидации */}
+                        {!isFormValid && Object.keys(touched).length > 0 && (
+                            <Grid item xs={12}>
+                                <Alert severity="warning" sx={{ mb: 2 }}>
+                                    <Typography variant="subtitle2">
+                                        Исправьте следующие ошибки:
+                                    </Typography>
+                                    <ul style={{ margin: 0, paddingLeft: 20 }}>
+                                        {Object.entries(errors).map(([field, error]) => (
+                                            <li key={field}>
+                                                {field === 'title' && 'Название: '}
+                                                {field === 'description' && 'Описание: '}
+                                                {field === 'deadline' && 'Дедлайн: '}
+                                                {field.startsWith('resource_') && `Ресурс ${field.split('_')[1]}: `}
+                                                {error}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </Alert>
+                            </Grid>
+                        )}
+
+                        {/* Кнопки действий */}
+                        <Grid item xs={12}>
+                            <Paper variant="outlined" sx={{ p: 2 }}>
+                                <Stack direction="row" spacing={2} justifyContent="flex-end">
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        startIcon={<Save />}
+                                        disabled={!isFormValid}
+                                        size="large"
+                                    >
+                                        {initialData.title ? 'Обновить технологию' : 'Добавить технологию'}
+                                    </Button>
+                                    <Button
+                                        type="button"
+                                        variant="outlined"
+                                        startIcon={<Cancel />}
+                                        onClick={onCancel}
+                                        size="large"
+                                    >
+                                        Отмена
+                                    </Button>
+                                </Stack>
+                            </Paper>
+                        </Grid>
+                    </Grid>
+                </form>
+            </Paper>
+        </Container>
     )
 }
 

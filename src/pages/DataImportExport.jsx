@@ -1,9 +1,37 @@
 import React, { useState } from 'react'
 import useTechnologies from '../hooks/useTechnologies'
+import {
+    Container,
+    Typography,
+    Box,
+    Paper,
+    Button,
+    Card,
+    CardContent,
+    Grid,
+    Alert,
+    LinearProgress,
+    Chip,
+    Divider,
+    List,
+    ListItem,
+    ListItemText,
+    IconButton
+} from '@mui/material'
+import {
+    CloudUpload,
+    CloudDownload,
+    CheckCircle,
+    Refresh,
+    Delete,
+    Add,
+    DataArray,
+    Warning
+} from '@mui/icons-material'
 
 function DataImportExport() {
     const { technologies, markAllCompleted, resetAllStatuses } = useTechnologies()
-    const [status, setStatus] = useState('')
+    const [status, setStatus] = useState({ type: '', message: '' })
     const [isDragging, setIsDragging] = useState(false)
 
     const exportToJSON = () => {
@@ -19,10 +47,10 @@ function DataImportExport() {
             document.body.removeChild(link)
             URL.revokeObjectURL(url)
 
-            setStatus('Данные экспортированы в JSON')
-            setTimeout(() => setStatus(''), 3000)
+            setStatus({ type: 'success', message: 'Данные экспортированы в JSON' })
+            setTimeout(() => setStatus({ type: '', message: '' }), 3000)
         } catch (error) {
-            setStatus('Ошибка экспорта данных')
+            setStatus({ type: 'error', message: 'Ошибка экспорта данных' })
             console.error('Ошибка экспорта:', error)
         }
     }
@@ -40,19 +68,16 @@ function DataImportExport() {
                     throw new Error('Неверный формат данных')
                 }
 
-                // Сохраняем импортированные данные
                 localStorage.setItem('technologies', JSON.stringify(imported))
-                setStatus(`Импортировано ${imported.length} технологий`)
+                setStatus({ type: 'success', message: `Импортировано ${imported.length} технологий` })
                 setTimeout(() => {
-                    setStatus('')
+                    setStatus({ type: '', message: '' })
                     window.location.reload()
                 }, 3000)
             } catch (error) {
-                setStatus('Ошибка импорта: неверный формат файла')
-                console.error('Ошибка импорта:', error)
+                setStatus({ type: 'error', message: 'Ошибка импорта: неверный формат файла' })
             }
         }
-
         reader.readAsText(file)
         event.target.value = ''
     }
@@ -72,32 +97,16 @@ function DataImportExport() {
 
         const file = e.dataTransfer.files[0]
         if (file && file.type === 'application/json') {
-            const reader = new FileReader()
-            reader.onload = (event) => {
-                try {
-                    const imported = JSON.parse(event.target.result)
-                    if (Array.isArray(imported)) {
-                        localStorage.setItem('technologies', JSON.stringify(imported))
-                        setStatus(`Импортировано ${imported.length} технологий`)
-                        setTimeout(() => {
-                            setStatus('')
-                            window.location.reload()
-                        }, 3000)
-                    }
-                } catch (error) {
-                    setStatus('Ошибка импорта: неверный формат файла')
-                }
-            }
-            reader.readAsText(file)
+            importFromJSON({ target: { files: [file] } })
         }
     }
 
     const handleClearAll = () => {
         if (window.confirm('Вы уверены, что хотите удалить все технологии? Это действие нельзя отменить.')) {
             localStorage.removeItem('technologies')
-            setStatus('Все данные удалены')
+            setStatus({ type: 'success', message: 'Все данные удалены' })
             setTimeout(() => {
-                setStatus('')
+                setStatus({ type: '', message: '' })
                 window.location.reload()
             }, 3000)
         }
@@ -120,7 +129,7 @@ function DataImportExport() {
                 id: Date.now() + 1,
                 title: 'Express.js',
                 description: 'Фреймворк для создания веб-приложений на Node.js',
-                status: 'not-started',
+                status: 'in-progress',
                 category: 'backend',
                 difficulty: 'beginner',
                 resources: ['https://expressjs.com'],
@@ -130,109 +139,289 @@ function DataImportExport() {
         ]
 
         localStorage.setItem('technologies', JSON.stringify(sampleData))
-        setStatus('Демо данные добавлены')
+        setStatus({ type: 'success', message: 'Демо данные добавлены' })
         setTimeout(() => {
-            setStatus('')
+            setStatus({ type: '', message: '' })
             window.location.reload()
         }, 3000)
     }
 
-    return (
-        <div className="page">
-            <div className="page-header">
-                <h1>Импорт и экспорт данных</h1>
-            </div>
+    const completedCount = technologies.filter(t => t.status === 'completed').length
+    const inProgressCount = technologies.filter(t => t.status === 'in-progress').length
+    const notStartedCount = technologies.filter(t => t.status === 'not-started').length
+    const progress = technologies.length > 0 ? Math.round((completedCount / technologies.length) * 100) : 0
 
-            {status && (
-                <div className={`status-message ${status.includes('Ошибка') ? 'error' : 'success'}`}>
-                    {status}
-                </div>
+    return (
+        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            <Typography variant="h4" component="h1" gutterBottom>
+                Импорт и экспорт данных
+            </Typography>
+
+            {status.message && (
+                <Alert
+                    severity={status.type === 'error' ? 'error' : 'success'}
+                    sx={{ mb: 3 }}
+                    onClose={() => setStatus({ type: '', message: '' })}
+                >
+                    {status.message}
+                </Alert>
             )}
 
-            <div className="data-actions">
-                <div className="action-section">
-                    <h2>Экспорт данных</h2>
-                    <p>Скачайте ваши данные в формате JSON для резервного копирования.</p>
-                    <button
-                        onClick={exportToJSON}
-                        disabled={technologies.length === 0}
-                        className="btn btn-primary"
-                    >
-                        Экспорт в JSON
-                    </button>
-                </div>
+            <Grid container spacing={3}>
+                {/* Экспорт данных */}
+                <Grid item xs={12} md={6}>
+                    <Card>
+                        <CardContent>
+                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                                <CloudDownload sx={{ mr: 1, color: 'primary.main' }} />
+                                <Typography variant="h6">Экспорт данных</Typography>
+                            </Box>
+                            <Typography color="text.secondary" paragraph>
+                                Скачайте ваши данные в формате JSON для резервного копирования.
+                            </Typography>
+                            <Button
+                                variant="contained"
+                                startIcon={<CloudDownload />}
+                                onClick={exportToJSON}
+                                disabled={technologies.length === 0}
+                                fullWidth
+                            >
+                                Экспорт в JSON
+                            </Button>
+                        </CardContent>
+                    </Card>
+                </Grid>
 
-                <div className="action-section">
-                    <h2>Импорт данных</h2>
-                    <p>Загрузите ранее экспортированные данные из JSON файла.</p>
+                {/* Импорт данных */}
+                <Grid item xs={12} md={6}>
+                    <Card>
+                        <CardContent>
+                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                                <CloudUpload sx={{ mr: 1, color: 'primary.main' }} />
+                                <Typography variant="h6">Импорт данных</Typography>
+                            </Box>
+                            <Typography color="text.secondary" paragraph>
+                                Загрузите ранее экспортированные данные из JSON файла.
+                            </Typography>
 
-                    <label className="btn btn-secondary file-input-label">
-                        Импорт из JSON
-                        <input
-                            type="file"
-                            accept=".json"
-                            onChange={importFromJSON}
-                            style={{ display: 'none' }}
-                        />
-                    </label>
+                            <Button
+                                variant="outlined"
+                                component="label"
+                                startIcon={<CloudUpload />}
+                                fullWidth
+                                sx={{ mb: 2 }}
+                            >
+                                Выбрать JSON файл
+                                <input
+                                    type="file"
+                                    accept=".json"
+                                    onChange={importFromJSON}
+                                    hidden
+                                />
+                            </Button>
 
-                    <div
-                        className={`drop-zone ${isDragging ? 'dragging' : ''}`}
-                        onDragOver={handleDragOver}
-                        onDragLeave={handleDragLeave}
-                        onDrop={handleDrop}
-                    >
-                        Перетащите JSON-файл сюда
-                    </div>
-                </div>
+                            <Paper
+                                variant="outlined"
+                                sx={{
+                                    p: 3,
+                                    textAlign: 'center',
+                                    border: isDragging ? '2px dashed #1976d2' : '2px dashed #ccc',
+                                    backgroundColor: isDragging ? 'action.hover' : 'transparent',
+                                    cursor: 'pointer'
+                                }}
+                                onDragOver={handleDragOver}
+                                onDragLeave={handleDragLeave}
+                                onDrop={handleDrop}
+                                onClick={() => document.querySelector('input[type="file"]')?.click()}
+                            >
+                                <CloudUpload sx={{ fontSize: 40, color: 'action.active', mb: 1 }} />
+                                <Typography>
+                                    Перетащите JSON-файл сюда или кликните для выбора
+                                </Typography>
+                            </Paper>
+                        </CardContent>
+                    </Card>
+                </Grid>
 
-                <div className="action-section">
-                    <h2>Быстрые действия</h2>
-                    <div className="quick-buttons">
-                        <button onClick={markAllCompleted} className="btn btn-success">
-                            Отметить все как выполненные
-                        </button>
-                        <button onClick={resetAllStatuses} className="btn btn-warning">
-                            Сбросить все статусы
-                        </button>
-                        <button onClick={generateSampleData} className="btn btn-info">
-                            Добавить демо данные
-                        </button>
-                        <button onClick={handleClearAll} className="btn btn-danger">
-                            Удалить все данные
-                        </button>
-                    </div>
-                </div>
+                {/* Быстрые действия */}
+                <Grid item xs={12}>
+                    <Card>
+                        <CardContent>
+                            <Typography variant="h6" gutterBottom>
+                                Быстрые действия
+                            </Typography>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12} sm={6} md={3}>
+                                    <Button
+                                        variant="outlined"
+                                        color="success"
+                                        startIcon={<CheckCircle />}
+                                        onClick={markAllCompleted}
+                                        fullWidth
+                                    >
+                                        Все выполненные
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={3}>
+                                    <Button
+                                        variant="outlined"
+                                        color="warning"
+                                        startIcon={<Refresh />}
+                                        onClick={resetAllStatuses}
+                                        fullWidth
+                                    >
+                                        Сбросить статусы
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={3}>
+                                    <Button
+                                        variant="outlined"
+                                        color="info"
+                                        startIcon={<Add />}
+                                        onClick={generateSampleData}
+                                        fullWidth
+                                    >
+                                        Добавить демо
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={3}>
+                                    <Button
+                                        variant="outlined"
+                                        color="error"
+                                        startIcon={<Delete />}
+                                        onClick={handleClearAll}
+                                        fullWidth
+                                    >
+                                        Удалить все
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </CardContent>
+                    </Card>
+                </Grid>
 
-                <div className="action-section">
-                    <h2>Текущие данные</h2>
-                    <div className="current-stats">
-                        <p><strong>Всего технологий:</strong> {technologies.length}</p>
-                        <p><strong>Завершено:</strong> {technologies.filter(t => t.status === 'completed').length}</p>
-                        <p><strong>В процессе:</strong> {technologies.filter(t => t.status === 'in-progress').length}</p>
-                        <p><strong>Не начато:</strong> {technologies.filter(t => t.status === 'not-started').length}</p>
-                    </div>
+                {/* Статистика */}
+                <Grid item xs={12}>
+                    <Card>
+                        <CardContent>
+                            <Typography variant="h6" gutterBottom>
+                                Текущие данные
+                            </Typography>
 
-                    {technologies.length > 0 && (
-                        <div className="technologies-preview">
-                            <h3>Предпросмотр технологий:</h3>
-                            <div className="preview-list">
-                                {technologies.slice(0, 5).map(tech => (
-                                    <div key={tech.id} className="preview-item">
-                                        <strong>{tech.title}</strong> - {tech.status}
-                                    </div>
-                                ))}
-                                {technologies.length > 5 && (
-                                    <div className="preview-more">
-                                        ... и еще {technologies.length - 5} технологий
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </div>
-        </div>
+                            <Grid container spacing={3}>
+                                <Grid item xs={12} md={6}>
+                                    <Paper variant="outlined" sx={{ p: 2 }}>
+                                        <Typography variant="subtitle2" gutterBottom>
+                                            Статистика
+                                        </Typography>
+                                        <Grid container spacing={2}>
+                                            <Grid item xs={6}>
+                                                <Box textAlign="center">
+                                                    <Typography variant="h4">
+                                                        {technologies.length}
+                                                    </Typography>
+                                                    <Typography variant="body2" color="text.secondary">
+                                                        Всего технологий
+                                                    </Typography>
+                                                </Box>
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <Box textAlign="center">
+                                                    <Typography variant="h4" color="success.main">
+                                                        {completedCount}
+                                                    </Typography>
+                                                    <Typography variant="body2" color="text.secondary">
+                                                        Завершено
+                                                    </Typography>
+                                                </Box>
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <Box textAlign="center">
+                                                    <Typography variant="h4" color="warning.main">
+                                                        {inProgressCount}
+                                                    </Typography>
+                                                    <Typography variant="body2" color="text.secondary">
+                                                        В процессе
+                                                    </Typography>
+                                                </Box>
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <Box textAlign="center">
+                                                    <Typography variant="h4" color="text.secondary">
+                                                        {notStartedCount}
+                                                    </Typography>
+                                                    <Typography variant="body2" color="text.secondary">
+                                                        Не начато
+                                                    </Typography>
+                                                </Box>
+                                            </Grid>
+                                        </Grid>
+                                    </Paper>
+                                </Grid>
+
+                                <Grid item xs={12} md={6}>
+                                    <Paper variant="outlined" sx={{ p: 2 }}>
+                                        <Typography variant="subtitle2" gutterBottom>
+                                            Общий прогресс
+                                        </Typography>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                                            <Typography variant="h3" sx={{ mr: 2 }}>
+                                                {progress}%
+                                            </Typography>
+                                            <Box sx={{ width: '100%', mr: 1 }}>
+                                                <LinearProgress
+                                                    variant="determinate"
+                                                    value={progress}
+                                                    sx={{ height: 10, borderRadius: 5 }}
+                                                />
+                                            </Box>
+                                        </Box>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {completedCount} из {technologies.length} технологий изучено
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            </Grid>
+
+                            {technologies.length > 0 && (
+                                <Box sx={{ mt: 3 }}>
+                                    <Typography variant="subtitle2" gutterBottom>
+                                        Предпросмотр технологий
+                                    </Typography>
+                                    <List dense>
+                                        {technologies.slice(0, 5).map(tech => (
+                                            <ListItem key={tech.id}>
+                                                <ListItemText
+                                                    primary={tech.title}
+                                                    secondary={
+                                                        <Chip
+                                                            label={tech.status === 'completed' ? 'Завершено' :
+                                                                tech.status === 'in-progress' ? 'В процессе' : 'Не начато'}
+                                                            size="small"
+                                                            color={
+                                                                tech.status === 'completed' ? 'success' :
+                                                                    tech.status === 'in-progress' ? 'warning' : 'default'
+                                                            }
+                                                        />
+                                                    }
+                                                />
+                                            </ListItem>
+                                        ))}
+                                        {technologies.length > 5 && (
+                                            <ListItem>
+                                                <ListItemText
+                                                    secondary={`... и еще ${technologies.length - 5} технологий`}
+                                                />
+                                            </ListItem>
+                                        )}
+                                    </List>
+                                </Box>
+                            )}
+                        </CardContent>
+                    </Card>
+                </Grid>
+            </Grid>
+        </Container>
     )
 }
 

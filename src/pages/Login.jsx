@@ -1,6 +1,19 @@
 import React, { useState } from 'react'
-import {redirect, useNavigate} from 'react-router-dom'
-import useLocalStorage from "../hooks/useLocalStorage.js";
+import { useNavigate } from 'react-router-dom'
+import useLocalStorage from "../hooks/useLocalStorage.js"
+import {
+    Container,
+    Typography,
+    Box,
+    Paper,
+    TextField,
+    Button,
+    Alert,
+    Card,
+    CardContent,
+    Divider
+} from '@mui/material'
+import { Lock, Person, Login as LoginIcon } from '@mui/icons-material'
 
 
 function Login({ onLogin }) {
@@ -26,59 +39,102 @@ function Login({ onLogin }) {
     }
 
     return (
-        <div className="page">
-            <div className="login-container">
-                <div className="login-form">
-                    <h1>Вход в систему</h1>
+        <Container component="main" maxWidth="xs">
+            <Box
+                sx={{
+                    marginTop: 8,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+            >
+                <Paper
+                    elevation={3}
+                    sx={{
+                        padding: 4,
+                        width: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Box sx={{ mb: 3, textAlign: 'center' }}>
+                        <Lock sx={{ fontSize: 40, color: 'primary.main', mb: 1 }} />
+                        <Typography component="h1" variant="h5">
+                            Вход в систему
+                        </Typography>
+                    </Box>
 
                     {error && (
-                        <div className="error-message" style={{ marginBottom: '20px' }}>
+                        <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
                             {error}
-                        </div>
+                        </Alert>
                     )}
 
-                    <form onSubmit={handleLogin}>
-                        <div className="form-group">
-                            <label>Имя пользователя:</label>
-                            <input
-                                type="text"
-                                value={username}
-                                placeholder="Введите имя пользователя"
-                                required
-                            />
-                        </div>
+                    <Box component="form" onSubmit={handleLogin} sx={{ width: '100%' }}>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            label="Имя пользователя"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            InputProps={{
+                                startAdornment: <Person sx={{ mr: 1, color: 'action.active' }} />
+                            }}
+                        />
 
-                        <div className="form-group">
-                            <label>Пароль:</label>
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                placeholder="Введите пароль"
-                                required
-                            />
-                        </div>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            label="Пароль"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
 
-                        <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
-                            Войти
-                        </button>
-                    </form>
-
-                    <div className="demo-info">
-                        <p>Демо доступ:</p>
-                        <p>Логин: <strong>admin</strong></p>
-                        <p>Пароль: <strong>password</strong></p>
-                        <button
-                            onClick={handleDemoLogin}
-                            className="btn btn-secondary"
-                            style={{ marginTop: '10px' }}
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            startIcon={<LoginIcon />}
+                            sx={{ mt: 3, mb: 2 }}
                         >
-                            Заполнить демо данные
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+                            Войти
+                        </Button>
+                    </Box>
+
+                    <Divider sx={{ width: '100%', my: 2 }}>
+                        <Typography variant="body2" color="text.secondary">
+                            Демо доступ
+                        </Typography>
+                    </Divider>
+
+                    <Card variant="outlined" sx={{ width: '100%', mb: 2 }}>
+                        <CardContent>
+                            <Typography variant="body2" color="text.secondary" gutterBottom>
+                                Для тестирования используйте:
+                            </Typography>
+                            <Typography variant="body2">
+                                <strong>Логин:</strong> admin
+                            </Typography>
+                            <Typography variant="body2">
+                                <strong>Пароль:</strong> password
+                            </Typography>
+                        </CardContent>
+                    </Card>
+
+                    <Button
+                        fullWidth
+                        variant="outlined"
+                        onClick={handleDemoLogin}
+                    >
+                        Заполнить демо данные
+                    </Button>
+                </Paper>
+            </Box>
+        </Container>
     )
 }
 
