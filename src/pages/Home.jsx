@@ -170,7 +170,7 @@ function Home() {
                                                 backgroundColor: 'action.hover'
                                             }
                                         }}
-                                        onClick={() => navigate(`/technology/${tech.id}`)}
+                                        onClick={() => navigate(`/FBD_KR4/technology/${tech.id}`)}
                                     >
                                         <Typography variant="h6" gutterBottom noWrap>
                                             {tech.title}

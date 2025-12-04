@@ -168,7 +168,7 @@ function TechnologyForm({ onSave, onCancel, initialData = {} }) {
             // Сохраняем в localStorage
             saveTechnologyToLocalStorage(cleanedData)
             addNotification(`Технология "${formData.title}" успешно сохранена!`, 'success')
-            navigate('/')
+            navigate('/FBD_KR4/')
         } else {
             addNotification('Пожалуйста, исправьте ошибки в форме', 'error')
         }

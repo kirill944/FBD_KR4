@@ -19,11 +19,11 @@ function AddTechnology() {
 
     const handleSave = (techData) => {
         addTechnology(techData)
-        navigate('/technologies')
+        navigate('/FBD_KR4/technologies')
     }
 
     const handleCancel = () => {
-        navigate('/technologies')
+        navigate('/FBD_KR4/technologies')
     }
 
     return (
@@ -32,10 +32,10 @@ function AddTechnology() {
                 <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
                     <MuiLink
                         color="inherit"
-                        href="/technologies"
+                        href="/FBD_KR4/technologies"
                         onClick={(e) => {
                             e.preventDefault()
-                            navigate('/technologies')
+                            navigate('/FBD_KR4/technologies')
                         }}
                     >
                         Технологии
